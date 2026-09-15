@@ -1,0 +1,8 @@
+export const uid = () => crypto.randomUUID();
+export const today = () => new Date().toLocaleDateString('en-CA');
+export const emptyData = () => ({profile:{name:'',school:'',year:'2026/2027',semester:'Ganjil'},classes:[],subjects:[],students:[],meetings:[]});
+export function demoData(){const d=emptyData();d.profile={name:'Guru Demo',school:'Sekolah Contoh',year:'2026/2027',semester:'Ganjil'};d.classes=[{id:'c1',name:'IV A',level:'SD',phase:'B'},{id:'c2',name:'VII A',level:'SMP',phase:'D'}];d.subjects=[{id:'s1',name:'Matematika',classIds:['c1','c2']},{id:'s2',name:'Bahasa Indonesia',classIds:['c1']}];d.students=['Aditya Pratama','Aisyah Putri','Bima Saputra','Citra Lestari','Daffa Ramadhan','Dewi Anggraini'].map((name,i)=>({id:'p'+i,name,nis:'100'+(i+1),classId:'c1'}));return d;}
+export function summarize(meetings,studentId){const t={H:0,S:0,I:0,A:0,unmarked:0,total:0};for(const m of meetings){if(!m.roster.some(s=>s.id===studentId))continue;t.total++;const s=m.attendance?.[studentId]?.status;if(['H','S','I','A'].includes(s))t[s]++;else t.unmarked++;}t.percent=t.total?Math.round(t.H/t.total*100):null;return t;}
+export function csv(rows){return '\ufeff'+rows.map(r=>r.map(v=>{let s=String(v??'');if(/^[=+@\-\t\r]/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"';}).join(',')).join('\r\n');}
+export function validateMeeting(m){if(!m.classId||!m.subjectId||!m.date||!m.time||!m.topic?.trim())throw Error('Lengkapi kelas, mapel, tanggal, jam, dan materi.');if(!m.roster.length)throw Error('Tambahkan siswa ke kelas terlebih dahulu.');}
+export function scoreValue(value){if(value==='')return '';const n=Number(value);if(!Number.isFinite(n)||n<0||n>100)throw Error('Nilai harus antara 0 dan 100.');return n;}

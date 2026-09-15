@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function owner(uid) { return request.auth != null && request.auth.uid == uid; }
+    // Create allowedUsers/{uid} manually in the console for the teacher's account.
+    function allowed(uid) { return owner(uid) && exists(/databases/$(database)/documents/allowedUsers/$(uid)); }
+    match /users/{uid}/records/{recordId} {
+      allow read: if allowed(uid);
+      allow create, update: if allowed(uid)
+        && request.resource.data.kind in ['profile','classes','subjects','students','meetings'];
+      allow delete: if false;
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}
