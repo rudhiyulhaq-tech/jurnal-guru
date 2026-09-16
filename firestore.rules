@@ -3,7 +3,11 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function owner(uid) { return request.auth != null && request.auth.uid == uid; }
     // Create allowedUsers/{uid} manually in the console for the teacher's account.
-    function allowed(uid) { return owner(uid) && exists(/databases/$(database)/documents/allowedUsers/$(uid)); }
+    function allowed(uid) {
+      return owner(uid)
+        && exists(/databases/$(database)/documents/allowedUsers/$(uid))
+        && get(/databases/$(database)/documents/allowedUsers/$(uid)).data.enabled == true;
+    }
     match /users/{uid}/records/{recordId} {
       allow read: if allowed(uid);
       allow create, update: if allowed(uid)
