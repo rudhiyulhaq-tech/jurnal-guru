@@ -11,7 +11,7 @@ service cloud.firestore {
     match /users/{uid}/records/{recordId} {
       allow read: if allowed(uid);
       allow create, update: if allowed(uid)
-        && request.resource.data.kind in ['profile','classes','subjects','students','meetings'];
+          && request.resource.data.kind in ['profile','classes','subjects','students','plans','meetings'];
       allow delete: if false;
     }
     match /{document=**} { allow read, write: if false; }
