@@ -1,4 +1,4 @@
-# Ruang Guru
+# NADI
 
 Aplikasi pribadi guru untuk web dan Android. React + Vite, Firebase Authentication, Cloud Firestore, dan Capacitor 7. Nama aplikasi masih dapat diganti.
 
